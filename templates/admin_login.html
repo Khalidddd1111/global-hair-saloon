@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in · Global Hair Saloon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@300..500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+
+    :root {
+      --bg:#0A0A0B; --surface:#101013; --surface-2:#16161B; --surface-3:#1C1C22;
+      --border:#22222A; --border-soft:#18181D;
+      --text:#F1F1F3; --text-2:#C1C1C6; --text-dim:#7A7A82; --text-mute:#54545C;
+      --blue:#1B3FDB; --blue-bright:#4F6BFF; --blue-glow:rgba(27,63,219,.28);
+      --green:#22C55E; --red:#EF4444;
+      --sans:'Geist',system-ui,sans-serif; --mono:'Geist Mono',monospace;
+      --ease:cubic-bezier(.32,.72,0,1); --ease-out:cubic-bezier(.16,1,.3,1);
+    }
+
+    html, body {
+      background: var(--bg); color: var(--text); font-family: var(--sans);
+      min-height: 100vh; font-size: 14px; line-height: 1.5;
+      letter-spacing: -0.01em; overflow: hidden;
+    }
+
+    /* animated background blobs */
+    .bg-blob {
+      position: fixed;
+      pointer-events: none;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: 0;
+    }
+    .blob-1 {
+      top: -200px; left: -200px;
+      width: 600px; height: 600px;
+      background: var(--blue-glow);
+      animation: float-1 18s ease-in-out infinite;
+    }
+    .blob-2 {
+      bottom: -250px; right: -150px;
+      width: 700px; height: 700px;
+      background: rgba(79, 107, 255, 0.18);
+      animation: float-2 22s ease-in-out infinite;
+    }
+
+    @keyframes float-1 {
+      0%,100% { transform: translate(0, 0) scale(1); }
+      50%     { transform: translate(80px, 120px) scale(1.1); }
+    }
+    @keyframes float-2 {
+      0%,100% { transform: translate(0, 0) scale(1); }
+      50%     { transform: translate(-100px, -80px) scale(0.95); }
+    }
+
+    /* grid pattern overlay */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border-soft) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border-soft) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body > * { position: relative; z-index: 1; }
+
+    ::selection { background: var(--blue); color: #fff; }
+
+    /* NAV */
+    .nav {
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-mark {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-bright));
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 600;
+      font-size: 11px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.06) inset,
+                  0 8px 20px -8px var(--blue);
+    }
+
+    .nav-brand span { color: var(--text-dim); font-weight: 400; }
+
+    .nav-meta {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* LAYOUT */
+    main {
+      min-height: calc(100vh - 70px);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: min(440px, 100%);
+      background: rgba(16, 16, 19, 0.7);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.04) inset,
+        0 40px 80px -20px rgba(0, 0, 0, 0.6);
+      animation: rise .8s var(--ease-out) both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding: 5px 11px;
+      background: var(--surface-2);
+      border: 1px solid var(--border-soft);
+      border-radius: 999px;
+      margin-bottom: 24px;
+    }
+
+    .badge::before {
+      content: "";
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--blue-bright);
+      box-shadow: 0 0 8px var(--blue-bright);
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .sub {
+      font-size: 14px;
+      color: var(--text-dim);
+      margin-bottom: 32px;
+      line-height: 1.55;
+    }
+
+    .field {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .field-label {
+      display: block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-family: var(--sans);
+      font-size: 15px;
+      color: var(--text);
+      outline: none;
+      transition: all 0.2s var(--ease);
+      letter-spacing: 0.02em;
+    }
+
+    input[type="password"]::placeholder { color: var(--text-mute); }
+
+    input[type="password"]:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px var(--blue-soft, rgba(27, 63, 219, 0.15));
+      background: var(--surface-2);
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: linear-gradient(135deg, var(--blue), var(--blue-bright));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      transition: all 0.2s var(--ease);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 8px 24px -8px var(--blue);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 32px -8px var(--blue);
+    }
+
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-primary svg {
+      transition: transform 0.2s var(--ease);
+    }
+
+    .btn-primary:hover svg { transform: translateX(3px); }
+
+    .foot {
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-mute);
+    }
+
+    .foot .secure {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .foot .secure::before {
+      content: "";
+      width: 5px; height: 5px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--green);
+    }
+
+    .error {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--red);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .error::before {
+      content: "!";
+      width: 18px; height: 18px;
+      background: var(--red);
+      color: #fff;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 600;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 500px) {
+      .card { padding: 28px 24px; }
+      h1 { font-size: 26px; }
+      .nav { padding: 16px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+
+  <nav class="nav">
+    <div class="nav-brand">
+      <div class="nav-mark"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 2px rgba(255,255,255,.5))">
+        <circle cx="6" cy="6.5" r="2.6"/>
+        <circle cx="6" cy="17.5" r="2.6"/>
+        <line x1="20" y1="4" x2="8.5" y2="15.5"/>
+        <line x1="14.5" y1="10.5" x2="20" y2="20"/>
+        <circle cx="12.5" cy="12.5" r="0.7" fill="currentColor" stroke="none"/>
+      </svg></div>
+      <div>Global<span> · Hair Saloon</span></div>
+    </div>
+    <div class="nav-meta">Admin · I-8/4 · Islamabad</div>
+  </nav>
+
+  <main>
+    <div class="card">
+      <div class="badge">Restricted Access</div>
+
+      <h1>Welcome back.</h1>
+      <p class="sub">Sign in to see today's register, manage appointments, and track the day's bookings.</p>
+
+      {% if error %}
+        <div class="error">{{ error }}</div>
+      {% endif %}
+
+      <form method="POST">
+        <div class="field">
+          <label class="field-label" for="pw">Password</label>
+          <input id="pw" type="password" name="password" placeholder="••••••••" autofocus autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="btn-primary">
+          Continue
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </button>
+      </form>
+
+      <div class="foot">
+        <span class="secure">Encrypted</span>
+        <span>Session · 60 min</span>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>

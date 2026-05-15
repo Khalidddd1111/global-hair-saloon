@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Global Hair Saloon — Islamabad</title>
+  <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+
+  <!-- ── Animated particle background ──────────────────── -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- ── NAV ─────────────────────────────────────────── -->
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a href="#" id="logoBtn" class="logo">
+        <span class="logo-mark">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="6" cy="6.5" r="2.6"/>
+            <circle cx="6" cy="17.5" r="2.6"/>
+            <line x1="20" y1="4" x2="8.5" y2="15.5"/>
+            <line x1="14.5" y1="10.5" x2="20" y2="20"/>
+            <circle cx="12.5" cy="12.5" r="0.7" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        <span class="logo-text">GLOBAL<span class="dot">.</span> HAIR SALOON</span>
+      </a>
+      <div class="nav-links">
+        <a href="#services">Services</a>
+        <a href="#work">Our Work</a>
+        <a href="#visit">Visit</a>
+        <a href="#book" class="nav-cta">Book</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── CLOSED OVERLAY ──────────────────────────────── -->
+  <div class="closed-overlay" id="closedOverlay" style="display:none">
+    <div class="closed-bulb-wrap">
+      <div class="closed-cord"></div>
+      <div class="closed-bulb-base"></div>
+      <div class="closed-bulb">
+        <div class="bulb-filament"></div>
+      </div>
+    </div>
+    <div class="closed-content">
+      <div class="closed-eyebrow">Global Hair Saloon</div>
+      <h1 class="closed-title">Sorry, we're <span class="italic">closed.</span></h1>
+      <p class="closed-message" id="closedOverlayMessage"></p>
+      <p class="closed-reopen" id="closedOverlayReopen"></p>
+      <div class="closed-foot">Normal hours · 8 AM – 11 PM daily</div>
+    </div>
+  </div>
+
+  <!-- ── HERO ────────────────────────────────────────── -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Est. Islamabad · I-8/4 · Open Now</div>
+      <h1 class="hero-title">
+        <span>Aapka khatt</span>
+        <span class="italic">hamara farz.</span>
+      </h1>
+      <p class="hero-sub">Sharp cuts. Honest service.</p>
+      <div class="hero-actions">
+        <a href="#book" class="btn-primary">Book an appointment</a>
+        <a href="#services" class="btn-ghost">See services</a>
+      </div>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <div class="meta-num"><span class="rating-star">★</span> 5.0</div>
+          <div class="meta-label">Google Rating</div>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <div class="meta-num">8AM – 11PM</div>
+          <div class="meta-label">Open Daily</div>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <div class="meta-num">45 min</div>
+          <div class="meta-label">Per Slot</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── SERVICES ────────────────────────────────────── -->
+  <section class="section services" id="services">
+    <div class="section-head">
+      <div class="eyebrow">01 — Services</div>
+      <h2 class="section-title">What we do, done well.</h2>
+    </div>
+    <div class="services-grid">
+
+      <article class="service-card" data-service="haircut">
+        <div class="service-num">01</div>
+        <h3 class="service-name">Haircut</h3>
+        <p class="service-desc">Classic cut and style — scissor or clipper work, finished with a hot towel.</p>
+        <div class="service-foot">
+          <span class="service-price">Rs. 500</span>
+          <span class="service-time">45 min</span>
+        </div>
+        <div class="service-cta">Book this <span>→</span></div>
+      </article>
+
+      <article class="service-card featured" data-service="haircut_and_beard">
+        <div class="featured-tag">Most Popular</div>
+        <div class="service-num">02</div>
+        <h3 class="service-name">Haircut + Beard</h3>
+        <p class="service-desc">The full experience — precision cut paired with a clean beard line and trim.</p>
+        <div class="service-foot">
+          <span class="service-price">Rs. 800</span>
+          <span class="service-time">45 min</span>
+        </div>
+        <div class="service-cta">Book this <span>→</span></div>
+      </article>
+
+      <article class="service-card" data-service="beard">
+        <div class="service-num">03</div>
+        <h3 class="service-name">Beard</h3>
+        <p class="service-desc">Shape, line-up, and trim — finished with conditioning oil for a soft, sharp look.</p>
+        <div class="service-foot">
+          <span class="service-price">Rs. 300</span>
+          <span class="service-time">45 min</span>
+        </div>
+        <div class="service-cta">Book this <span>→</span></div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ── BOOKING FLOW ────────────────────────────────── -->
+  <section class="section book-section" id="book">
+    <div class="section-head">
+      <div class="eyebrow">02 — Booking</div>
+      <h2 class="section-title">Reserve your chair.</h2>
+    </div>
+
+    <div class="booking-flow" id="bookingFlow">
+
+      <!-- Step 1: Service -->
+      <div class="step">
+        <div class="step-label">01 — Service</div>
+        <div class="service-options">
+          <button type="button" class="service-option" data-service="haircut" data-price="500">
+            <div class="opt-name">Haircut</div>
+            <div class="opt-price">Rs. 500</div>
+          </button>
+          <button type="button" class="service-option" data-service="haircut_and_beard" data-price="800">
+            <div class="opt-name">Haircut + Beard</div>
+            <div class="opt-price">Rs. 800</div>
+          </button>
+          <button type="button" class="service-option" data-service="beard" data-price="300">
+            <div class="opt-name">Beard</div>
+            <div class="opt-price">Rs. 300</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Barber -->
+      <div class="step">
+        <div class="step-label">02 — Your Barber</div>
+        <div class="barbers-grid" id="barbersGrid">
+          <div class="barbers-empty">Loading barbers…</div>
+        </div>
+      </div>
+
+      <!-- Step 3: Date -->
+      <div class="step">
+        <div class="step-label">03 — Date</div>
+        <input type="date" id="bookDate" class="book-input">
+      </div>
+
+      <!-- Step 4: Time -->
+      <div class="step">
+        <div class="step-label">04 — Time</div>
+        <div class="slots-grid" id="slotsGrid">
+          <div class="slots-empty">Pick a date to see available times.</div>
+        </div>
+      </div>
+
+      <!-- Step 5: Details -->
+      <div class="step">
+        <div class="step-label">05 — Your Details</div>
+        <input type="text" id="bookName"  class="book-input" placeholder="Your full name" autocomplete="name">
+        <input type="tel"  id="bookPhone" class="book-input" placeholder="Phone number (e.g. 0300 1234567)" autocomplete="tel">
+      </div>
+
+      <!-- Submit -->
+      <div class="step step-submit">
+        <button type="button" class="btn-book" id="btnBook">Confirm Booking</button>
+        <div class="book-error" id="bookError" style="display:none"></div>
+      </div>
+
+    </div>
+
+    <!-- Confirmation -->
+    <div class="confirmation" id="confirmation" style="display:none">
+      <div class="check">✓</div>
+      <h3>Booking confirmed!</h3>
+      <p class="conf-sub">A WhatsApp confirmation will be sent to the salon. See you soon.</p>
+      <div class="confirm-details" id="confirmDetails"></div>
+      <div class="confirmation-actions">
+        <a href="#" class="btn-primary" id="ratingLink" style="display:none">
+          Rate your visit
+        </a>
+        <button type="button" class="btn-ghost" id="btnReset">Book another</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── OUR WORK ────────────────────────────────────── -->
+  <section class="work-section" id="work">
+    <div class="work-head">
+      <div class="eyebrow">03 — Our Work</div>
+      <h2 class="section-title">Recent cuts.</h2>
+    </div>
+
+    <div class="gallery-wrap">
+      <div class="gallery-track">
+        <figure class="gallery-card"><img src="/static/img/cut-1.jpeg" alt="" loading="lazy"></figure>
+        <figure class="gallery-card"><img src="/static/img/cut-2.jpeg" alt="" loading="lazy"></figure>
+        <figure class="gallery-card"><img src="/static/img/cut-3.jpeg" alt="" loading="lazy"></figure>
+        <figure class="gallery-card"><img src="/static/img/cut-4.jpeg" alt="" loading="lazy"></figure>
+        <figure class="gallery-card"><img src="/static/img/cut-5.jpeg" alt="" loading="lazy"></figure>
+        <figure class="gallery-card"><img src="/static/img/cut-1.jpeg" alt="" loading="lazy"></figure>
+        <figure class="gallery-card"><img src="/static/img/cut-2.jpeg" alt="" loading="lazy"></figure>
+        <figure class="gallery-card"><img src="/static/img/cut-3.jpeg" alt="" loading="lazy"></figure>
+        <figure class="gallery-card"><img src="/static/img/cut-4.jpeg" alt="" loading="lazy"></figure>
+        <figure class="gallery-card"><img src="/static/img/cut-5.jpeg" alt="" loading="lazy"></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── VISIT ───────────────────────────────────────── -->
+  <section class="section visit" id="visit">
+    <div class="section-head">
+      <div class="eyebrow">04 — Visit</div>
+      <h2 class="section-title">Find us.</h2>
+    </div>
+
+    <div class="visit-photos">
+      <figure class="visit-photo">
+        <img src="/static/img/outside.jpeg" alt="Global Hair Saloon storefront" loading="lazy">
+        <figcaption>
+          <span class="vp-label">Storefront</span>
+          <span class="vp-meta">Pakeeza Market, I-8/4</span>
+        </figcaption>
+      </figure>
+      <figure class="visit-photo">
+        <img src="/static/img/inside.jpeg" alt="Inside Global Hair Saloon" loading="lazy">
+        <figcaption>
+          <span class="vp-label">Interior</span>
+          <span class="vp-meta">Six chairs · open daily</span>
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="visit-grid">
+      <div>
+        <div class="visit-row">
+          <div class="visit-label">Address</div>
+          <div class="visit-val">1 Pakeeza Market Street<br>I-8/4, Islamabad</div>
+        </div>
+        <div class="visit-row">
+          <div class="visit-label">Hours</div>
+          <div class="visit-val">8:00 AM – 11:00 PM<br>Open daily</div>
+        </div>
+        <div class="visit-row">
+          <div class="visit-label">Phone</div>
+          <div class="visit-val">0318 5044396<br>0301 2740359</div>
+        </div>
+        <a href="https://maps.app.goo.gl/CceE9xSwun1pwtXB6" target="_blank" rel="noopener" class="btn-primary inline-cta">
+          Open in Maps
+        </a>
+      </div>
+      <div class="visit-map">
+        <iframe
+          src="https://www.openstreetmap.org/export/embed.html?bbox=73.072%2C33.661%2C73.080%2C33.666&layer=mapnik&marker=33.6637666%2C73.0762167"
+          loading="lazy"
+          title="Map of Global Hair Saloon">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ──────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-mark inverted">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="6" cy="6.5" r="2.6"/>
+            <circle cx="6" cy="17.5" r="2.6"/>
+            <line x1="20" y1="4" x2="8.5" y2="15.5"/>
+            <line x1="14.5" y1="10.5" x2="20" y2="20"/>
+            <circle cx="12.5" cy="12.5" r="0.7" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        <span>Global Hair Saloon</span>
+      </div>
+      <div class="footer-meta">
+        © <span id="year"></span> · Islamabad · Made with care
+      </div>
+    </div>
+  </footer>
+
+  <!-- toast mount -->
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script src="/static/index.js"></script>
+</body>
+</html>

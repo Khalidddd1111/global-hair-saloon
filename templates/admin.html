@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard · Global Hair Saloon</title>
+  <link rel="stylesheet" href="/static/admin.css">
+</head>
+<body>
+
+  <!-- NAV ─────────────────────────────────────────────────── -->
+  <nav class="nav">
+    <div class="nav-brand">
+      <div class="nav-mark"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 2px rgba(255,255,255,.5))">
+        <circle cx="6" cy="6.5" r="2.6"/>
+        <circle cx="6" cy="17.5" r="2.6"/>
+        <line x1="20" y1="4" x2="8.5" y2="15.5"/>
+        <line x1="14.5" y1="10.5" x2="20" y2="20"/>
+        <circle cx="12.5" cy="12.5" r="0.7" fill="currentColor" stroke="none"/>
+      </svg></div>
+      <div class="nav-brand-text">Global<span> · Hair Saloon</span></div>
+    </div>
+    <div class="nav-right">
+      <button class="nav-btn" id="btnWalkin" title="Walk-in booking">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Walk-in
+      </button>
+      <button class="nav-btn" id="btnSearch" title="Search bookings">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="shop-pill open" id="shopPill">
+        <span class="shop-dot"></span>
+        <span id="shopText">Shop Open</span>
+      </button>
+      <div class="nav-clock" id="navClock">14:32 IST</div>
+      <a href="/admin/logout" class="nav-out">Sign out</a>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- HERO ─────────────────────────────────────────────── -->
+    <section class="hero">
+      <div class="hero-greet rise d1" id="heroGreet">Loading day…</div>
+      <h1 class="hero-title rise d2">
+        You have <span class="count" id="apptCount">0</span><br>
+        appointments today.
+      </h1>
+      <div class="hero-meta rise d3" id="heroMeta">
+        <span id="metaDate">—</span>
+        <span class="sep"></span>
+        <span id="metaHours">— hours of work</span>
+        <span class="sep"></span>
+        <span id="metaRevenue">₨ —</span>
+      </div>
+    </section>
+
+    <!-- DATE STRIP ───────────────────────────────────────── -->
+    <section class="date-strip rise d4">
+      <button class="date-nav" id="dateBack" aria-label="Previous week">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="date-track" id="dateTrack"></div>
+      <button class="date-nav" id="dateFwd" aria-label="Next week">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <input type="date" id="datePicker" class="date-actual">
+    </section>
+
+    <!-- KPI CARDS ────────────────────────────────────────── -->
+    <section class="kpis rise d4">
+      <article class="kpi">
+        <div class="kpi-label">
+          Confirmed
+          <span class="ic">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+        </div>
+        <div class="kpi-num" id="kpiConfirmed">0</div>
+        <div class="kpi-foot">
+          <span class="delta flat" id="kpiConfirmedDelta">—</span>
+          <span>vs. avg day</span>
+        </div>
+      </article>
+
+      <article class="kpi">
+        <div class="kpi-label">
+          Open Hours
+          <span class="ic">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </span>
+        </div>
+        <div class="kpi-num" id="kpiOpen">0</div>
+        <div class="kpi-foot">
+          <span>of <span id="kpiTotal">0</span> slots</span>
+        </div>
+      </article>
+
+      <article class="kpi">
+        <div class="kpi-label">
+          Revenue
+          <span class="ic">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </span>
+        </div>
+        <div class="kpi-num"><span class="prefix">₨</span><span id="kpiRevenue">0</span></div>
+        <div class="kpi-foot">
+          <span id="kpiAvgTicket">avg ₨ —</span>
+        </div>
+      </article>
+
+      <article class="kpi">
+        <div class="kpi-label">
+          Utilization
+          <span class="ic">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </span>
+        </div>
+        <div class="kpi-num"><span id="kpiUtil">0</span>%</div>
+        <div class="kpi-foot">
+          <span>of the working day</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- TIMELINE ─────────────────────────────────────────── -->
+    <section class="timeline rise d5">
+      <div class="section-head" style="margin-bottom: 0">
+        <h2>Day at a glance</h2>
+        <div class="timeline-legend">
+          <span><span class="sw"></span>Booked</span>
+          <span><span class="sw cx"></span>Cancelled</span>
+          <span><span class="sw nw"></span>Now</span>
+        </div>
+      </div>
+      <div class="timeline-rail" id="timelineRail"></div>
+    </section>
+
+    <!-- APPOINTMENTS ─────────────────────────────────────── -->
+    <div class="section-head rise d5">
+      <h2>Appointments</h2>
+      <div class="filters" id="filters">
+        <button class="chip active" data-filter="all">All <span class="num" id="cAll">0</span></button>
+        <button class="chip" data-filter="confirmed">Confirmed <span class="num" id="cConf">0</span></button>
+        <button class="chip" data-filter="cancelled">Cancelled <span class="num" id="cCanc">0</span></button>
+      </div>
+    </div>
+    <ul class="appt-list" id="apptList">
+      <li class="skel"></li>
+      <li class="skel"></li>
+      <li class="skel"></li>
+    </ul>
+
+    <!-- SLOT GRID ────────────────────────────────────────── -->
+    <div class="section-head rise d6">
+      <h2>Time slots</h2>
+      <span class="meta">45-min · 08:00 – 22:15</span>
+    </div>
+    <div class="slot-grid" id="slotGrid"></div>
+
+    <!-- BARBERS ──────────────────────────────────────────── -->
+    <div class="section-head" style="margin-top:64px">
+      <h2>Barbers</h2>
+      <button class="btn small primary" id="btnAddBarber">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add barber
+      </button>
+    </div>
+    <div class="barber-grid" id="barberGrid">
+      <div class="empty">Loading…</div>
+    </div>
+
+    <!-- ANALYTICS ──────────────────────────────────────── -->
+    <div class="section-head" style="margin-top:64px">
+      <h2>Analytics</h2>
+      <div class="section-tools">
+        <div class="period-pills" id="periodPills">
+          <button class="period-pill" data-d="7">7d</button>
+          <button class="period-pill active" data-d="30">30d</button>
+          <button class="period-pill" data-d="90">90d</button>
+        </div>
+        <button class="btn small" id="btnExport">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </button>
+      </div>
+    </div>
+
+    <!-- Analytics KPIs -->
+    <div class="ana-kpis">
+      <div class="ana-kpi">
+        <div class="ana-kpi-v" id="aBookings">—</div>
+        <div class="ana-kpi-l">Bookings</div>
+      </div>
+      <div class="ana-kpi">
+        <div class="ana-kpi-v" id="aRevenue">—</div>
+        <div class="ana-kpi-l">Revenue</div>
+      </div>
+      <div class="ana-kpi">
+        <div class="ana-kpi-v" id="aPeakHour">—</div>
+        <div class="ana-kpi-l">Peak Hour</div>
+      </div>
+      <div class="ana-kpi">
+        <div class="ana-kpi-v" id="aPeakDay">—</div>
+        <div class="ana-kpi-l">Peak Day</div>
+      </div>
+    </div>
+
+    <div class="ana-grid">
+      <!-- Top services -->
+      <div class="ana-card">
+        <h3 class="ana-title">Top services</h3>
+        <div class="ana-services" id="anaServices">
+          <div class="empty">Loading…</div>
+        </div>
+      </div>
+
+      <!-- Busy hours -->
+      <div class="ana-card">
+        <h3 class="ana-title">Busy hours</h3>
+        <div class="ana-hours" id="anaHours">
+          <div class="empty">Loading…</div>
+        </div>
+      </div>
+
+      <!-- Busy days -->
+      <div class="ana-card">
+        <h3 class="ana-title">Busy days</h3>
+        <div class="ana-days" id="anaDays">
+          <div class="empty">Loading…</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- TOAST + DIALOG MOUNTS ─────────────────────────────── -->
+  <div class="toast-stack" id="toastStack"></div>
+  <div class="dialog-veil" id="dialogVeil">
+    <div class="dialog">
+      <div class="dialog-title" id="dlgTitle">Confirm</div>
+      <div class="dialog-msg"  id="dlgMsg">Are you sure?</div>
+      <div class="dialog-actions">
+        <button class="btn"        id="dlgCancel">Cancel</button>
+        <button class="btn danger" id="dlgOk">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHOP TOGGLE MODAL ─────────────────────────────────── -->
+  <div class="modal-veil" id="shopModal">
+    <div class="modal">
+      <div class="modal-title">Shop status</div>
+      <div class="modal-sub">Toggle the shop. Customers see a "we're closed" page when off.</div>
+
+      <div class="switch-row">
+        <span>Open for bookings</span>
+        <label class="switch">
+          <input type="checkbox" id="shopToggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div id="closureFields">
+        <label class="modal-label">Closure message <span class="opt">optional</span></label>
+        <input id="shopMessage" class="modal-input" type="text" placeholder="e.g. Closed for renovation" maxlength="200">
+
+        <label class="modal-label">Reopen date <span class="opt">optional</span></label>
+        <input id="shopReopen" class="modal-input date-input" type="date">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn"         id="shopCancel">Cancel</button>
+        <button class="btn primary" id="shopSave">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WALK-IN MODAL ─────────────────────────────────────── -->
+  <div class="modal-veil" id="walkinModal">
+    <div class="modal">
+      <div class="modal-title">Walk-in booking</div>
+      <div class="modal-sub">Book a slot manually for an in-person customer.</div>
+
+      <label class="modal-label">Name</label>
+      <input id="walkName" class="modal-input" type="text" placeholder="Customer name">
+
+      <label class="modal-label">Phone</label>
+      <input id="walkPhone" class="modal-input" type="tel" placeholder="03XX XXXXXXX">
+
+      <label class="modal-label">Service</label>
+      <select id="walkService" class="modal-input">
+        <option value="haircut">Haircut — Rs. 500</option>
+        <option value="haircut_and_beard" selected>Haircut + Beard — Rs. 800</option>
+        <option value="beard">Beard — Rs. 300</option>
+      </select>
+
+      <div class="modal-grid-2">
+        <div>
+          <label class="modal-label">Date</label>
+          <input id="walkDate" class="modal-input date-input" type="date">
+        </div>
+        <div>
+          <label class="modal-label">Time</label>
+          <select id="walkTime" class="modal-input"><option>Pick date first</option></select>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn"         id="walkCancel">Cancel</button>
+        <button class="btn primary" id="walkSave">Book it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH MODAL ──────────────────────────────────────── -->
+  <div class="modal-veil" id="searchModal">
+    <div class="modal modal-wide">
+      <div class="modal-title">Search bookings</div>
+      <div class="modal-sub">By name, phone, or booking ID</div>
+
+      <div class="search-input-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="searchInput" class="modal-input search-input" type="text" placeholder="Type to search…" autocomplete="off">
+      </div>
+
+      <div class="search-results" id="searchResults">
+        <div class="empty" style="padding:32px">Start typing to search.</div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn" id="searchClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD BARBER MODAL ──────────────────────────────────── -->
+  <div class="modal-veil" id="barberModal">
+    <div class="modal">
+      <div class="modal-title">Add a barber</div>
+      <div class="modal-sub">They'll log in at <code>/barber/login</code> with these credentials.</div>
+
+      <label class="modal-label">Display name</label>
+      <input id="bName" class="modal-input" type="text" placeholder="e.g. Saqib Ahmed">
+
+      <label class="modal-label">Username</label>
+      <input id="bUser" class="modal-input" type="text" placeholder="e.g. saqib (lowercase)" autocapitalize="off">
+
+      <label class="modal-label">Password</label>
+      <input id="bPass" class="modal-input" type="text" placeholder="Min 4 characters">
+
+      <div class="modal-actions">
+        <button class="btn"         id="bCancel">Cancel</button>
+        <button class="btn primary" id="bSave">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPORT CSV MODAL ──────────────────────────────────── -->
+  <div class="modal-veil" id="exportModal">
+    <div class="modal">
+      <div class="modal-title">Export bookings</div>
+      <div class="modal-sub">Download bookings between two dates as a CSV file.</div>
+
+      <div class="modal-grid-2">
+        <div>
+          <label class="modal-label">Start date</label>
+          <input id="expStart" class="modal-input date-input" type="date">
+        </div>
+        <div>
+          <label class="modal-label">End date</label>
+          <input id="expEnd" class="modal-input date-input" type="date">
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn"         id="expCancel">Cancel</button>
+        <button class="btn primary" id="expDownload">Download</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/admin.js"></script>
+</body>
+</html>

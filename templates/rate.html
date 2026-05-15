@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rate your visit · Global Hair Saloon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@300..500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+    :root {
+      --bg:#0A0A0B; --surface:#101013; --surface-2:#16161B; --surface-3:#1C1C22;
+      --border:#22222A; --border-soft:#18181D;
+      --text:#F1F1F3; --text-2:#C1C1C6; --text-dim:#7A7A82; --text-mute:#54545C;
+      --blue:#1B3FDB; --blue-bright:#4F6BFF; --blue-glow:rgba(27,63,219,.22);
+      --green:#22C55E; --green-soft:rgba(34,197,94,.12);
+      --red:#EF4444; --amber:#F5C518;
+      --sans:'Geist',system-ui,sans-serif; --mono:'Geist Mono',monospace;
+      --ease:cubic-bezier(.32,.72,0,1); --ease-out:cubic-bezier(.16,1,.3,1);
+    }
+    html, body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; font-size: 14px; line-height: 1.5; color-scheme: dark; }
+    body::before { content:""; position:fixed; top:-300px; right:-200px; width:800px; height:800px; background:radial-gradient(circle, var(--blue-glow), transparent 60%); pointer-events:none; z-index:0; filter:blur(50px); opacity:.5; }
+    body > * { position: relative; z-index: 1; }
+    ::selection { background: var(--blue); color: #fff; }
+
+    .nav { padding: 20px 32px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-soft); }
+    .nav-mark { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--blue), var(--blue-bright)); display: grid; place-items: center; color: #fff; font-weight: 600; font-size: 11px; box-shadow: 0 0 0 1px rgba(255,255,255,.06) inset, 0 8px 20px -8px var(--blue); }
+    .nav-text { font-weight: 600; font-size: 14px; letter-spacing: -0.02em; }
+    .nav-text span { color: var(--text-dim); font-weight: 400; }
+
+    main { max-width: 560px; margin: 0 auto; padding: 64px 24px 96px; }
+
+    .badge { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 24px; padding: 6px 12px; background: var(--surface); border: 1px solid var(--border-soft); border-radius: 999px; }
+    .badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 8px var(--amber); }
+
+    h1 { font-size: clamp(32px, 5vw, 44px); font-weight: 500; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 12px; }
+    h1 em { font-style: normal; background: linear-gradient(135deg, var(--blue-bright), #8FA4FF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+    .lede { font-size: 15px; color: var(--text-dim); margin-bottom: 40px; line-height: 1.55; }
+
+    /* booking summary card */
+    .summary { background: var(--surface); border: 1px solid var(--border-soft); border-radius: 14px; padding: 18px 22px; margin-bottom: 28px; display: flex; flex-direction: column; gap: 8px; }
+    .sum-row { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; }
+    .sum-row .l { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); }
+    .sum-row .v { color: var(--text); font-weight: 500; letter-spacing: -0.005em; }
+
+    /* form */
+    .field { margin-bottom: 22px; }
+    .field-label { display: block; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
+
+    select, textarea {
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 16px; font-family: var(--sans); font-size: 15px;
+      color: var(--text); outline: none; transition: all 0.2s var(--ease);
+    }
+    select { appearance: none; cursor: pointer; padding-right: 40px; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A7A82' stroke-width='2.5' stroke-linecap='round'><polyline points='6 9 12 15 18 9'/></svg>"); background-repeat: no-repeat; background-position: right 16px center; }
+    textarea { resize: vertical; min-height: 90px; font-family: var(--sans); }
+
+    select:focus, textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(27,63,219,.15); background: var(--surface-2); }
+
+    /* star rating */
+    .stars-input { display: flex; gap: 6px; }
+    .star-btn {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--surface-3);
+      border-radius: 12px;
+      padding: 22px 0;
+      font-size: 32px;
+      line-height: 1;
+      cursor: pointer;
+      transition: all 0.2s var(--ease);
+    }
+    .star-btn:hover { border-color: var(--text-mute); transform: translateY(-2px); }
+    .star-btn.lit { color: var(--amber); border-color: rgba(245,197,24,.4); background: rgba(245,197,24,.08); box-shadow: 0 8px 24px -8px rgba(245,197,24,.4); }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--blue), var(--blue-bright));
+      color: #fff; border: none; border-radius: 14px; padding: 18px;
+      font-family: var(--sans); font-size: 15px; font-weight: 500; letter-spacing: -0.005em;
+      cursor: pointer; transition: all 0.25s var(--ease);
+      box-shadow: 0 10px 28px -8px var(--blue);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 12px;
+    }
+    .submit-btn::after { content: "→"; font-size: 17px; transition: transform .2s var(--ease); }
+    .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 36px -8px var(--blue); }
+    .submit-btn:hover:not(:disabled)::after { transform: translateX(4px); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .error { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.25); border-radius: 10px; padding: 12px 16px; font-size: 13px; color: var(--red); margin-top: 14px; display: none; }
+    .error.show { display: block; }
+
+    /* THANKS state */
+    .thanks { text-align: center; padding: 32px 0; }
+    .thanks .check {
+      width: 64px; height: 64px; margin: 0 auto 24px;
+      border-radius: 50%; background: linear-gradient(135deg, var(--green), #16A34A);
+      color: #fff; display: grid; place-items: center; font-size: 28px; font-weight: 600;
+      box-shadow: 0 12px 28px -8px var(--green);
+      animation: pop .5s var(--ease-out) both;
+    }
+    @keyframes pop { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .thanks h2 { font-size: 26px; font-weight: 500; letter-spacing: -0.025em; margin-bottom: 8px; }
+    .thanks p { font-size: 14px; color: var(--text-dim); margin-bottom: 24px; }
+    .thanks a { color: var(--blue-bright); text-decoration: none; font-weight: 500; }
+    .thanks a:hover { text-decoration: underline; }
+
+    /* not found / already rated */
+    .info-card { background: var(--surface); border: 1px solid var(--border-soft); border-radius: 16px; padding: 32px; text-align: center; }
+    .info-card h2 { font-size: 22px; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .info-card p { font-size: 14px; color: var(--text-dim); margin-bottom: 20px; line-height: 1.55; }
+    .info-card a { color: var(--blue-bright); text-decoration: none; font-weight: 500; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-mark"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 2px rgba(255,255,255,.5))">
+        <circle cx="6" cy="6.5" r="2.6"/>
+        <circle cx="6" cy="17.5" r="2.6"/>
+        <line x1="20" y1="4" x2="8.5" y2="15.5"/>
+        <line x1="14.5" y1="10.5" x2="20" y2="20"/>
+        <circle cx="12.5" cy="12.5" r="0.7" fill="currentColor" stroke="none"/>
+      </svg></div>
+    <div class="nav-text">Global<span> · Hair Saloon</span></div>
+  </nav>
+
+  <main>
+
+  {% if not booking_found %}
+    <div class="info-card">
+      <h2>Booking not found</h2>
+      <p>We couldn't find a booking with that ID. Check the link or <a href="/">go to the site</a>.</p>
+    </div>
+
+  {% elif already_rated %}
+    <div class="info-card">
+      <h2>You've already rated this visit</h2>
+      <p>Thanks — your feedback is recorded. <a href="/">Back to site</a></p>
+    </div>
+
+  {% elif barbers|length == 0 %}
+    <div class="info-card">
+      <h2>No barbers to rate yet</h2>
+      <p>The salon hasn't added barbers for rating. Try again later. <a href="/">Back to site</a></p>
+    </div>
+
+  {% else %}
+
+    <div class="badge">Your visit</div>
+    <h1>How was it, <em>{{ booking_name }}</em>?</h1>
+    <p class="lede">A quick rating helps your barber and helps other customers find the right cut. Takes 10 seconds.</p>
+
+    <div class="summary">
+      <div class="sum-row"><span class="l">Service</span><span class="v">{{ booking_service }}</span></div>
+      <div class="sum-row"><span class="l">Date</span><span class="v">{{ booking_date }} · {{ booking_time }}</span></div>
+      <div class="sum-row"><span class="l">Booking</span><span class="v" style="font-family:var(--mono);font-size:12px">{{ booking_id }}</span></div>
+    </div>
+
+    <div id="form">
+      <div class="field">
+        <label class="field-label">Who was your barber?</label>
+        <select id="barberSel">
+          {% for b in barbers %}
+            <option value="{{ b.id }}">{{ b.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Your rating</label>
+        <div class="stars-input" id="stars">
+          <button type="button" class="star-btn" data-v="1">★</button>
+          <button type="button" class="star-btn" data-v="2">★</button>
+          <button type="button" class="star-btn" data-v="3">★</button>
+          <button type="button" class="star-btn" data-v="4">★</button>
+          <button type="button" class="star-btn" data-v="5">★</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">A few words <span style="color:var(--text-mute);text-transform:none;letter-spacing:0;font-family:var(--sans)">optional</span></label>
+        <textarea id="comment" placeholder="What did you like? Anything to improve?" maxlength="500"></textarea>
+      </div>
+
+      <button class="submit-btn" id="submit">Submit rating</button>
+      <div class="error" id="error"></div>
+    </div>
+
+    <div id="thanks" class="thanks" style="display:none">
+      <div class="check">✓</div>
+      <h2>Thanks for the feedback!</h2>
+      <p>Your rating has been recorded.</p>
+      <a href="/">← Back to Global Hair Saloon</a>
+    </div>
+
+  {% endif %}
+
+  </main>
+
+  <script>
+    let chosen = 0;
+    const stars = document.querySelectorAll(".star-btn");
+    const errBox = document.getElementById("error");
+
+    stars.forEach(btn => {
+      btn.addEventListener("mouseenter", () => paint(parseInt(btn.dataset.v)));
+      btn.addEventListener("mouseleave", () => paint(chosen));
+      btn.addEventListener("click", () => {
+        chosen = parseInt(btn.dataset.v);
+        paint(chosen);
+      });
+    });
+    function paint(n) {
+      stars.forEach((b, i) => b.classList.toggle("lit", i < n));
+    }
+
+    const submitBtn = document.getElementById("submit");
+    if (submitBtn) submitBtn.addEventListener("click", async () => {
+      errBox.classList.remove("show");
+      if (!chosen) { showErr("Please pick a rating first."); return; }
+
+      const body = {
+        stars,
+        barber_id: parseInt(document.getElementById("barberSel").value),
+        comment: document.getElementById("comment").value,
+      };
+      // overwrite stars (var conflict — use value)
+      body.stars = chosen;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting…";
+
+      try {
+        const r = await fetch(window.location.pathname, {
+          method:  "POST",
+          headers: { "Content-Type": "application/json" },
+          body:    JSON.stringify(body),
+        });
+        const d = await r.json();
+        if (d.success) {
+          document.getElementById("form").style.display = "none";
+          document.getElementById("thanks").style.display = "block";
+        } else {
+          showErr(d.error || "Could not submit");
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit rating";
+        }
+      } catch (e) {
+        showErr("Network error.");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit rating";
+      }
+    });
+
+    function showErr(msg) {
+      errBox.textContent = msg;
+      errBox.classList.add("show");
+    }
+  </script>
+
+</body>
+</html>

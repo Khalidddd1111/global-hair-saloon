@@ -1,0 +1,20 @@
+# Secrets — NEVER push these to GitHub
+.env
+.env.*
+*.env
+
+# Python junk
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Editor / OS junk
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Old database dumps
+*.sql.bak
+*.db

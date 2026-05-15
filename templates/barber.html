@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard · Barber · Global Hair Saloon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@300..500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+    :root {
+      --bg:#0A0A0B; --surface:#101013; --surface-2:#16161B; --surface-3:#1C1C22;
+      --border:#22222A; --border-soft:#18181D;
+      --text:#F1F1F3; --text-2:#C1C1C6; --text-dim:#7A7A82; --text-mute:#54545C;
+      --blue:#1B3FDB; --blue-bright:#4F6BFF; --blue-glow:rgba(27,63,219,.22);
+      --green:#22C55E; --green-soft:rgba(34,197,94,.12);
+      --red:#EF4444; --red-soft:rgba(239,68,68,.12);
+      --amber:#F59E0B;
+      --sans:'Geist',system-ui,sans-serif; --mono:'Geist Mono',monospace;
+      --ease:cubic-bezier(.32,.72,0,1); --ease-out:cubic-bezier(.16,1,.3,1);
+    }
+    html, body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; font-size: 14px; line-height: 1.5; letter-spacing: -0.01em; color-scheme: dark; }
+    body::before { content:""; position:fixed; top:-300px; right:-200px; width:800px; height:800px; background:radial-gradient(circle, var(--blue-glow), transparent 60%); pointer-events:none; z-index:0; filter:blur(50px); opacity:.6; }
+    body > * { position: relative; z-index: 1; }
+    ::selection { background: var(--blue); color: #fff; }
+
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(10,10,11,.72);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 14px 32px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; letter-spacing: -0.02em; }
+    .nav-mark { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--blue), var(--blue-bright)); display: grid; place-items: center; color: #fff; font-weight: 600; font-size: 11px; box-shadow: 0 0 0 1px rgba(255,255,255,.06) inset, 0 8px 20px -8px var(--blue); }
+    .nav-brand span { color: var(--text-dim); font-weight: 400; }
+    .nav-right { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+    .nav-clock { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--surface); border: 1px solid var(--border-soft); border-radius: 999px; }
+    .nav-clock::before { content: ""; width: 6px; height: 6px; background: var(--green); border-radius: 50%; box-shadow: 0 0 0 3px var(--green-soft); animation: pulse 2s var(--ease) infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 3px var(--green-soft); } 50% { box-shadow: 0 0 0 6px transparent; } }
+    .nav-out { color: var(--text-dim); text-decoration: none; font-size: 13px; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border-soft); transition: all .2s var(--ease); }
+    .nav-out:hover { color: var(--text); background: var(--surface); border-color: var(--border); }
+
+    main { max-width: 720px; margin: 0 auto; padding: 64px 32px 96px; }
+
+    .hello {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--text-dim); margin-bottom: 16px;
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 6px 12px; background: var(--surface);
+      border: 1px solid var(--border-soft); border-radius: 999px;
+    }
+    .hello::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--blue-bright); }
+
+    h1 { font-size: clamp(40px, 5vw, 56px); font-weight: 500; line-height: 1.05; letter-spacing: -0.035em; margin-bottom: 16px; }
+    h1 em { font-style: normal; background: linear-gradient(135deg, var(--blue-bright), #8FA4FF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+    .live { font-size: 15px; color: var(--text-dim); margin-bottom: 48px; }
+    .live .live-time { color: var(--text); font-family: var(--mono); font-weight: 500; }
+
+    /* CLOCK CARD ─── the big 2-button moment */
+    .clock-card {
+      background:
+        radial-gradient(circle at top right, var(--blue-glow), transparent 50%),
+        var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 24px;
+      padding: 36px 32px;
+      margin-bottom: 32px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .clock-state {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .clock-state .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .clock-card.working .clock-state .dot { background: var(--green); box-shadow: 0 0 12px var(--green); animation: pulse 2s var(--ease) infinite; }
+    .clock-card.off .clock-state .dot { background: var(--text-mute); }
+    .clock-card.working .clock-state { color: var(--green); }
+
+    .clock-big { font-size: 44px; font-weight: 500; letter-spacing: -0.03em; color: var(--text); line-height: 1; font-variant-numeric: tabular-nums; }
+    .clock-since { font-size: 13px; color: var(--text-dim); margin-top: 8px; font-family: var(--mono); }
+
+    .clock-btn {
+      background: linear-gradient(135deg, var(--blue), var(--blue-bright));
+      color: #fff; border: none; border-radius: 14px;
+      padding: 18px 32px; font-family: var(--sans); font-size: 15px; font-weight: 500;
+      cursor: pointer; transition: all 0.25s var(--ease);
+      box-shadow: 0 10px 28px -8px var(--blue);
+      display: inline-flex; align-items: center; gap: 10px;
+      letter-spacing: -0.005em;
+    }
+    .clock-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 36px -8px var(--blue); }
+    .clock-btn:disabled { opacity: 0.6; cursor: wait; }
+    .clock-btn.out { background: linear-gradient(135deg, #DC2626, var(--red)); box-shadow: 0 10px 28px -8px var(--red); }
+    .clock-btn.out:hover:not(:disabled) { box-shadow: 0 14px 36px -8px var(--red); }
+
+    /* STATS GRID */
+    .stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+      margin-bottom: 32px;
+    }
+    .stat {
+      background: var(--surface); border: 1px solid var(--border-soft);
+      border-radius: 16px; padding: 22px 20px;
+      transition: all 0.3s var(--ease);
+    }
+    .stat:hover { background: var(--surface-2); border-color: var(--border); transform: translateY(-2px); }
+    .stat-label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 14px; }
+    .stat-value { font-size: 32px; font-weight: 500; letter-spacing: -0.035em; line-height: 1; color: var(--text); font-variant-numeric: tabular-nums; }
+    .stat-value .unit { font-size: 16px; color: var(--text-dim); font-weight: 400; margin-left: 4px; }
+    .stat-foot { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-mute); margin-top: 10px; }
+
+    /* RATING */
+    .rating {
+      background: var(--surface); border: 1px solid var(--border-soft);
+      border-radius: 16px; padding: 24px 28px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .rating-left .l { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+    .rating-left .v { font-size: 28px; font-weight: 500; letter-spacing: -0.025em; color: var(--text); }
+    .rating-left .v small { color: var(--text-dim); font-weight: 400; font-size: 14px; margin-left: 6px; font-family: var(--mono); }
+    .rating-stars { font-size: 28px; color: var(--amber); letter-spacing: 4px; }
+    .rating-stars .empty { color: var(--surface-3); }
+
+    /* TOAST */
+    .toast-stack { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 8px; z-index: 100; pointer-events: none; }
+    .toast { pointer-events: auto; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 12px 18px; font-size: 13px; color: var(--text); display: flex; align-items: center; gap: 10px; min-width: 260px; box-shadow: 0 20px 50px -20px rgba(0,0,0,.6); opacity: 0; transform: translateY(12px) scale(.96); transition: all .32s var(--ease-out); }
+    .toast.show { opacity: 1; transform: translateY(0) scale(1); }
+    .toast::before { content: ""; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .toast.success::before { background: var(--green); box-shadow: 0 0 12px var(--green); }
+    .toast.error::before { background: var(--red); box-shadow: 0 0 12px var(--red); }
+
+    @media (max-width: 640px) {
+      main { padding: 40px 18px 80px; }
+      .nav { padding: 12px 18px; }
+      .nav-clock { display: none; }
+      .clock-card { grid-template-columns: 1fr; gap: 20px; padding: 28px 24px; }
+      .clock-big { font-size: 36px; }
+      .stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-brand">
+      <div class="nav-mark"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 2px rgba(255,255,255,.5))">
+        <circle cx="6" cy="6.5" r="2.6"/>
+        <circle cx="6" cy="17.5" r="2.6"/>
+        <line x1="20" y1="4" x2="8.5" y2="15.5"/>
+        <line x1="14.5" y1="10.5" x2="20" y2="20"/>
+        <circle cx="12.5" cy="12.5" r="0.7" fill="currentColor" stroke="none"/>
+      </svg></div>
+      <div>Global<span> · Barber</span></div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-clock" id="liveClock">—</div>
+      <a href="/barber/logout" class="nav-out">Sign out</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="hello" id="hello">Loading…</div>
+    <h1>Hey, <em>{{ name }}</em>.</h1>
+    <div class="live"><span id="liveDate">—</span> · <span class="live-time" id="liveTime">—</span></div>
+
+    <!-- CLOCK CARD ─── 2-button core -->
+    <div class="clock-card" id="clockCard">
+      <div>
+        <div class="clock-state" id="clockState"><span class="dot"></span>Loading</div>
+        <div class="clock-big" id="clockBig">—</div>
+        <div class="clock-since" id="clockSince">—</div>
+      </div>
+      <button class="clock-btn" id="btnClock">Loading…</button>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Today</div>
+        <div class="stat-value"><span id="sToday">0</span><span class="unit">hrs</span></div>
+        <div class="stat-foot">hours clocked</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">This Week</div>
+        <div class="stat-value"><span id="sWeek">0</span><span class="unit">hrs</span></div>
+        <div class="stat-foot">Mon → Sun</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">This Month</div>
+        <div class="stat-value"><span id="sMonth">0</span><span class="unit">hrs</span></div>
+        <div class="stat-foot">since the 1st</div>
+      </div>
+    </div>
+
+    <!-- RATING -->
+    <div class="rating">
+      <div class="rating-left">
+        <div class="l">Customer Rating</div>
+        <div class="v"><span id="rAvg">—</span><small id="rCount"></small></div>
+      </div>
+      <div class="rating-stars" id="rStars">☆☆☆☆☆</div>
+    </div>
+  </main>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script>
+    let liveTimer = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      tickClock();
+      setInterval(tickClock, 1000);
+      load();
+    });
+
+    function tickClock() {
+      const n = new Date();
+      document.getElementById("liveClock").textContent =
+        n.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) + " IST";
+      document.getElementById("liveTime").textContent =
+        n.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+      document.getElementById("liveDate").textContent =
+        n.toLocaleDateString("en-PK", { weekday: "long", month: "long", day: "numeric" });
+    }
+
+    async function load() {
+      try {
+        const r = await fetch("/barber/me");
+        const d = await r.json();
+        if (d.success) render(d.stats);
+      } catch (e) {
+        toast("Couldn't load data", "error");
+      }
+    }
+
+    function render(s) {
+      const card = document.getElementById("clockCard");
+      const state = document.getElementById("clockState");
+      const big = document.getElementById("clockBig");
+      const since = document.getElementById("clockSince");
+      const btn = document.getElementById("btnClock");
+      const hello = document.getElementById("hello");
+
+      if (s.is_clocked_in) {
+        card.className = "clock-card working";
+        state.innerHTML = '<span class="dot"></span>Currently working';
+        hello.textContent = "You're on the clock";
+
+        const startTime = new Date(s.current_session_started);
+        const updateLive = () => {
+          const mins = Math.floor((new Date() - startTime) / 60000);
+          const h = Math.floor(mins / 60);
+          const m = mins % 60;
+          big.textContent = `${h}h ${String(m).padStart(2,"0")}m`;
+          since.textContent = `started at ${startTime.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})}`;
+        };
+        updateLive();
+        if (liveTimer) clearInterval(liveTimer);
+        liveTimer = setInterval(updateLive, 30000);
+
+        btn.className = "clock-btn out";
+        btn.innerHTML = `Clock out
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>`;
+      } else {
+        card.className = "clock-card off";
+        state.innerHTML = '<span class="dot"></span>Off the clock';
+        hello.textContent = "Ready when you are";
+        if (liveTimer) clearInterval(liveTimer);
+        big.textContent = s.today_hours + "h today";
+        since.textContent = `${s.week_hours}h this week`;
+
+        btn.className = "clock-btn";
+        btn.innerHTML = `Clock in
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+      }
+      btn.disabled = false;
+
+      document.getElementById("sToday").textContent = s.today_hours;
+      document.getElementById("sWeek").textContent  = s.week_hours;
+      document.getElementById("sMonth").textContent = s.month_hours;
+
+      document.getElementById("rAvg").textContent =
+        s.rating_count > 0 ? s.avg_rating : "—";
+      document.getElementById("rCount").textContent =
+        s.rating_count > 0 ? ` (${s.rating_count} rating${s.rating_count === 1 ? "" : "s"})` : " no ratings yet";
+
+      const filled = Math.round(s.avg_rating);
+      const stars  = "★".repeat(filled) + '<span class="empty">' + "★".repeat(5 - filled) + '</span>';
+      document.getElementById("rStars").innerHTML = s.rating_count > 0 ? stars : '<span class="empty">★★★★★</span>';
+    }
+
+    document.getElementById("btnClock").addEventListener("click", async () => {
+      const btn = document.getElementById("btnClock");
+      btn.disabled = true;
+      const wasIn = document.getElementById("clockCard").classList.contains("working");
+      btn.textContent = wasIn ? "Clocking out…" : "Clocking in…";
+      try {
+        const r = await fetch("/barber/clock", { method: "POST" });
+        const d = await r.json();
+        if (d.success) {
+          render(d.stats);
+          toast(d.action === "in" ? "Clocked in — good shift!" : "Clocked out — see you next time", "success");
+        } else {
+          toast("Couldn't clock", "error");
+          btn.disabled = false;
+        }
+      } catch (e) {
+        toast("Network error", "error");
+        btn.disabled = false;
+      }
+    });
+
+    function toast(msg, type = "info") {
+      const el = document.createElement("div");
+      el.className = `toast ${type}`;
+      el.textContent = msg;
+      document.getElementById("toastStack").appendChild(el);
+      requestAnimationFrame(() => el.classList.add("show"));
+      setTimeout(() => { el.classList.remove("show"); setTimeout(() => el.remove(), 320); }, 3500);
+    }
+  </script>
+
+</body>
+</html>
