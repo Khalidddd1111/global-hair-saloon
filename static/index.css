@@ -47,6 +47,7 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 body {
@@ -969,13 +970,55 @@ input[type="date"].book-input {
   font-family: var(--mono);
   letter-spacing: 0.02em;
   cursor: pointer;
+  /* Strip iOS Safari's default chrome so our styling actually applies */
+  -webkit-appearance: none;
+  appearance: none;
+  /* Tell the browser this is a dark-mode input so native picker is dark */
+  color-scheme: dark;
+  /* iOS shrinks date inputs by default — force consistent height */
+  min-height: 52px;
+  line-height: 1.4;
+  text-align: left;
+  display: block;
+  box-sizing: border-box;
+}
+
+/* iOS / Android — fix the segmented date-text wrapper alignment */
+input[type="date"].book-input::-webkit-datetime-edit {
+  color: var(--text);
+  padding: 0;
+  line-height: 1.4;
+}
+
+input[type="date"].book-input::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+
+input[type="date"].book-input::-webkit-datetime-edit-text {
+  color: var(--text-dim);
+  padding: 0 4px;
+}
+
+input[type="date"].book-input::-webkit-datetime-edit-month-field,
+input[type="date"].book-input::-webkit-datetime-edit-day-field,
+input[type="date"].book-input::-webkit-datetime-edit-year-field {
+  color: var(--text);
+}
+
+/* When empty, show ghosted hint matching our muted color */
+input[type="date"].book-input:not(:focus):in-range::-webkit-datetime-edit-fields-wrapper,
+input[type="date"].book-input:invalid::-webkit-datetime-edit {
+  color: var(--text-mute);
 }
 
 input[type="date"].book-input::-webkit-calendar-picker-indicator {
-  filter: invert(0.6);
+  filter: invert(0.65) sepia(1) saturate(8) hue-rotate(210deg);
   cursor: pointer;
-  opacity: 0.6;
+  opacity: 0.85;
   transition: opacity 0.2s var(--ease);
+  width: 20px;
+  height: 20px;
+  margin-left: 8px;
 }
 
 input[type="date"].book-input:hover::-webkit-calendar-picker-indicator {
@@ -1732,7 +1775,7 @@ input[type="date"].book-input:hover::-webkit-calendar-picker-indicator {
   margin-bottom: 20px;
 }
 
-.closed-title.italic {
+.closed-title .italic {
   /* uses gradient defined above */
 }
 
